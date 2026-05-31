@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Network - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
+.container{max-width:500px;margin:0 auto;padding:20px}
+h2{text-align:center;margin:30px 0;color:#00ff88}
+.card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:15px;padding:25px;margin:15px 0;cursor:pointer;transition:all 0.3s}
+.card:hover{border-color:#00ff88}
+.solana h3{color:#9945FF}
+.ethereum h3{color:#627EEA}
+.bsc h3{color:#F3BA2F}
+.card h3{font-size:22px;margin-bottom:8px}
+.card p{color:#888;font-size:14px;margin:5px 0}
+.btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:15px 0;text-align:center;text-decoration:none}
+.btn-solana{background:#9945FF;color:#fff}
+.btn-ethereum{background:#627EEA;color:#fff}
+.btn-bsc{background:#F3BA2F;color:#000}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Select Blockchain Network</h2>
+
+<div class="card solana">
+<h3>⚡ Solana</h3>
+<p>Fastest & Cheapest</p>
+<p>Fees: ~$0.00025 | Speed: 0.4s</p>
+<p>SOL, USDC</p>
+<a href="/wallet?network=solana" class="btn btn-solana">Create Solana Wallet</a>
+</div>
+
+<div class="card ethereum">
+<h3>💎 Ethereum</h3>
+<p>Most Secure Network</p>
+<p>Fees: ~$2-5 | Speed: 15s</p>
+<p>ETH, USDT, USDC</p>
+<a href="/wallet?network=ethereum" class="btn btn-ethereum">Create Ethereum Wallet</a>
+</div>
+
+<div class="card bsc">
+<h3>🔷 BNB Smart Chain</h3>
+<p>Most Popular</p>
+<p>Fees: ~$0.03 | Speed: 3s</p>
+<p>BNB, USDT, BUSD</p>
+<a href="/wallet?network=bsc" class="btn btn-bsc">Create BSC Wallet</a>
+</div>
+</div>
+</body>
+</html>

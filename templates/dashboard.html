@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Dashboard - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
+.container{max-width:500px;margin:0 auto;padding:20px}
+.header{text-align:center;padding:20px}
+.header h2{color:#00ff88}
+.balance-card{background:linear-gradient(135deg,#1a1f3a,#0d1130);border:1px solid #2a2f4a;border-radius:20px;padding:25px;margin:20px 0;text-align:center}
+.balance-amount{font-size:42px;font-weight:bold;color:#00ff88}
+.balance-change{color:#00ff88;font-size:16px;margin:5px 0}
+.status{display:inline-block;padding:5px 15px;border-radius:20px;font-size:14px;margin:10px 0}
+.active{background:#00ff88;color:#000}
+.timer{color:#888;font-size:14px}
+.trades-card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:20px;padding:20px;margin:20px 0}
+.trade-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #2a2f4a}
+.profit{color:#00ff88}
+.loss{color:#ff4444}
+.progress-bar{background:#1a1f3a;border-radius:10px;height:8px;margin:20px 0;overflow:hidden}
+.progress-fill{background:#00ff88;height:100%;border-radius:10px;transition:width 1s}
+.btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:15px 0;text-align:center;text-decoration:none}
+.btn-deposit{background:#00ff88;color:#000}
+.btn-withdraw{background:#ff4444;color:#fff;opacity:0.5}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h2>🦅 Trading Dashboard</h2>
+<span class="status active">🟢 Bot Active</span>
+<p class="timer">⏱️ 18h remaining</p>
+</div>
+
+<div class="balance-card">
+<p>💰 Trading Balance</p>
+<div class="balance-amount" id="balance">$0.00</div>
+<div class="balance-change" id="profit">+$0.00 (0%)</div>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" style="width:65%"></div>
+</div>
+
+<div class="trades-card">
+<h3>🏆 Recent Trades</h3>
+<div id="trades">
+<div class="trade-item"><span>✅ BTC/USDT</span><span>8m ago</span><span class="profit">+$5.40</span></div>
+<div class="trade-item"><span>✅ ETH/USDT</span><span>15m ago</span><span class="profit">+$3.20</span></div>
+<div class="trade-item"><span>❌ SOL/USDC</span><span>22m ago</span><span class="loss">-$1.80</span></div>
+<div class="trade-item"><span>✅ BNB/USDT</span><span>30m ago</span><span class="profit">+$7.10</span></div>
+</div>
+</div>
+
+<a href="/select" class="btn btn-deposit">📥 Deposit More</a>
+<a href="/withdraw" class="btn btn-withdraw">⏳ Withdraw (Available in 18h)</a>
+</div>
+
+<script>
+let balance = 500;
+let profit = 0;
+const targetProfit = balance * 0.10;
+
+setInterval(() => {
+    const add = Math.random() * 2;
+    profit += add;
+    const total = balance + profit;
+    const percent = Math.min(((profit / targetProfit) * 100), 100).toFixed(1);
+    
+    document.getElementById('balance').textContent = '$' + total.toFixed(2);
+    document.getElementById('profit').textContent = '+$' + profit.toFixed(2) + ' (' + percent + '%)';
+}, 3000);
+</script>
+</body>
+</html>

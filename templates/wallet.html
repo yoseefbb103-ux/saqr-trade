@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Wallet - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
+.container{max-width:500px;margin:0 auto;padding:20px}
+h2{text-align:center;margin:30px 0;color:#00ff88}
+.card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:15px;padding:25px;margin:15px 0}
+.card h3{font-size:18px;margin-bottom:10px;color:#00ff88}
+.address-box{background:#0d1130;padding:15px;border-radius:10px;word-break:break-all;font-family:monospace;margin:10px 0;border:1px solid #2a2f4a}
+.key-box{background:#0d1130;padding:15px;border-radius:10px;word-break:break-all;font-family:monospace;margin:10px 0;border:1px solid #ff4444;filter:blur(5px);cursor:pointer}
+.key-box:hover{filter:none}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin:10px 0;text-align:center;text-decoration:none}
+.btn-copy{background:#2a2f4a;color:#fff}
+.btn-start{background:#00ff88;color:#000;font-weight:bold}
+.warning{color:#ff4444;font-size:12px;margin:10px 0}
+.info{color:#888;font-size:13px;margin:5px 0}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>✅ Wallet Created!</h2>
+
+<div class="card">
+<h3>📥 Deposit Address</h3>
+<div class="address-box" id="address">Loading...</div>
+<button class="btn btn-copy" onclick="copyAddress()">📋 Copy Address</button>
+</div>
+
+<div class="card">
+<h3>🔑 Private Key</h3>
+<p class="warning">⚠️ Save this key - it will not be shown again!</p>
+<div class="key-box" id="privateKey">Loading...</div>
+<button class="btn btn-copy" onclick="copyKey()">📋 Copy Private Key</button>
+</div>
+
+<div class="card">
+<p class="info">💰 Minimum Deposit: <span id="minDeposit"></span></p>
+<p class="info">🎁 First Deposit Bonus: +10%</p>
+<p class="info">⏱️ Appears after network confirmations</p>
+</div>
+
+<a href="/dashboard" class="btn btn-start">🚀 Start Auto Trading</a>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const network = urlParams.get('network') || 'ethereum';
+
+fetch('/api/create-wallet', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({network: network})
+})
+.then(r => r.json())
+.then(data => {
+    document.getElementById('address').textContent = data.address;
+    document.getElementById('privateKey').textContent = data.private_key;
+    
+    if(network === 'solana') {
+        document.getElementById('minDeposit').textContent = '0.1 SOL';
+    } else if(network === 'ethereum') {
+        document.getElementById('minDeposit').textContent = '0.05 ETH';
+    } else {
+        document.getElementById('minDeposit').textContent = '0.05 BNB';
+    }
+});
+
+function copyAddress() {
+    const text = document.getElementById('address').textContent;
+    navigator.clipboard.writeText(text);
+    alert('Address copied!');
+}
+
+function copyKey() {
+    const text = document.getElementById('privateKey').textContent;
+    navigator.clipboard.writeText(text);
+    alert('Private key copied!');
+}
+</script>
+</body>
+</html>

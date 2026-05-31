@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdraw - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
+.container{max-width:500px;margin:0 auto;padding:20px}
+h2{text-align:center;margin:30px 0;color:#00ff88}
+.card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:15px;padding:25px;margin:15px 0}
+input{width:100%;padding:15px;border-radius:10px;border:1px solid #2a2f4a;background:#0d1130;color:#fff;font-size:16px;margin:10px 0}
+.btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:15px 0}
+.btn-withdraw{background:#ff4444;color:#fff}
+.error{color:#ff4444;text-align:center;margin:10px 0;display:none}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>💸 Withdraw Funds</h2>
+
+<div class="card">
+<h3>Enter Withdrawal Address</h3>
+<input type="text" id="withdrawAddress" placeholder="Your wallet address...">
+<h3>Enter Private Key</h3>
+<input type="password" id="privateKey" placeholder="Your private key...">
+<button class="btn btn-withdraw" onclick="withdraw()">💸 Confirm Withdrawal</button>
+<p class="error" id="error">❌ Invalid private key! Please check and try again.</p>
+</div>
+</div>
+
+<script>
+function withdraw() {
+    document.getElementById('error').style.display = 'block';
+    setTimeout(() => {
+        document.getElementById('error').style.display = 'none';
+    }, 3000);
+}
+</script>
+</body>
+</html>
