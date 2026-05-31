@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Withdrawals - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff}
+.container{max-width:500px;margin:0 auto;padding:20px}
+h2{text-align:center;margin:20px 0;color:#00ff88}
+.payment{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:10px;padding:15px;margin:10px 0;display:flex;justify-content:space-between;align-items:center}
+.payment-amount{color:#00ff88;font-weight:bold;font-size:18px}
+.payment-address{font-family:monospace;font-size:11px;color:#888}
+.payment-time{color:#666;font-size:11px}
+.payment-status{color:#00ff88;font-size:12px}
+.total{text-align:center;padding:20px;color:#FFD700;font-size:24px;font-weight:bold}
+.live{display:inline-block;width:8px;height:8px;background:#00ff88;border-radius:50%;animation:pulse 1s infinite;margin-right:5px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>💸 Recent Withdrawals <span class="live"></span></h2>
+<p class="total">$2,847,230 Paid Out</p>
+<div id="payments"></div>
+</div>
+
+<script>
+const wallets = [
+    '0x7A3B5C9D2E1F8A4B6C0D3E5F7A9B1C3D',
+    '0xF1E2D3C4B5A69788796A5B4C3D2E1F0A',
+    '0xB1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6',
+    '0xC3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8',
+    '0xA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6',
+    '0x9F0A1B2C3D4E5F6A7B8C9D0E1F2A3B4C5',
+    '0xD9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4',
+    '0x1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7'
+];
+
+const names = ['Ahmed_S', 'Sara_K', 'Mohammed_R', 'Noura_A', 'Fahad_M', 'Layla_H', 'Omar_B', 'Aisha_Q'];
+
+const coins = ['ETH', 'USDT', 'BNB', 'SOL', 'USDC'];
+
+function addPayment() {
+    const name = names[Math.floor(Math.random() * names.length)];
+    const wallet = wallets[Math.floor(Math.random() * wallets.length)];
+    const coin = coins[Math.floor(Math.random() * coins.length)];
+    const amount = (Math.random() * 5 + 0.5).toFixed(2);
+    const time = Math.floor(Math.random() * 5) + 1;
+    
+    const div = document.createElement('div');
+    div.className = 'payment';
+    div.innerHTML = `
+        <div>
+            <div class="payment-amount">+${amount} ${coin}</div>
+            <div class="payment-address">👤 ${name} · ${wallet.substring(0,8)}...${wallet.substring(wallet.length-6)}</div>
+        </div>
+        <div>
+            <div class="payment-status">✅ Confirmed</div>
+            <div class="payment-time">${time}m ago</div>
+        </div>
+    `;
+    
+    const container = document.getElementById('payments');
+    container.insertBefore(div, container.firstChild);
+    if (container.children.length > 15) container.removeChild(container.lastChild);
+}
+
+// Initial payments
+for(let i=0; i<10; i++) addPayment();
+
+// New payments every 8-15 seconds
+setInterval(() => {
+    addPayment();
+    // Update total
+    const total = (2.8 + Math.random() * 0.1).toFixed(1);
+    document.querySelector('.total').textContent = 
+        '$' + (total.replace('.', ',') + ',230').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' Paid Out';
+}, Math.random() * 7000 + 8000);
+</script>
+</body>
+</html>
