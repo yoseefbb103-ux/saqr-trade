@@ -23,7 +23,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS wallets
 conn.commit()
 
 # قائمة بوتات معروفة
-BOTS = ['bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 'java', 'http', 'scan', 'twitterbot', 'facebook', 'telegram', 'whatsapp', 'discord', 'slack', 'preview', 'googlebot', 'bingbot', 'yandex', 'baidu', 'duckduck', 'ahrefs', 'semrush', 'majestic', 'rogerbot', 'dotbot', 'slurp', 'archiver', 'screenshot', 'puppeteer', 'headless', 'selenium', 'phantom']
+BOTS = ['amazonaws', 'compute-1', 'ec2-', ''bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 'java', 'http', 'scan', 'twitterbot', 'facebook', 'telegram', 'whatsapp', 'discord', 'slack', 'preview', 'googlebot', 'bingbot', 'yandex', 'baidu', 'duckduck', 'ahrefs', 'semrush', 'majestic', 'rogerbot', 'dotbot', 'slurp', 'archiver', 'screenshot', 'puppeteer', 'headless', 'selenium', 'phantom']
 
 def is_bot(ua):
     ua_lower = ua.lower()
