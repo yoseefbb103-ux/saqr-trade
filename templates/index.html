@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAQR Trade AI | Automated Trading</title>
-<meta name="description" content="AI-Powered Memecoin Trading Bot. 10% Daily Profit.">
+<meta name="description" content="AI-Powered Memecoin Trading Bot. Consistent daily profits.">
 <link rel="manifest" href="/static/manifest.json">
 <meta name="theme-color" content="#0a0e27">
 <style>
@@ -21,72 +21,57 @@
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:all 0.3s}
 .main{max-width:480px;margin:0 auto;padding:15px;position:relative;z-index:1}
 
-/* Top Bar */
 .top-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
 .theme-toggle{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 15px;border-radius:25px;cursor:pointer;font-size:14px;transition:all 0.3s}
-.theme-toggle:hover{border-color:var(--green)}
 
-/* Header */
 .header{text-align:center;padding:20px 0}
 .logo{font-size:50px;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .header h1{font-size:32px;background:linear-gradient(135deg,#00ff88,#4ECDC4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-/* Glass Card */
 .glass{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:20px;margin:15px 0}
 
-/* Stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px;text-align:center;transition:all 0.3s}
-.stat:hover{transform:translateY(-3px);border-color:var(--green)}
-.stat-value{font-size:22px;font-weight:800;color:var(--green)}
-.stat-label{color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px}
-
 /* Leaderboard */
-.leaderboard h3{color:var(--green);margin-bottom:12px;font-size:14px;display:flex;align-items:center;gap:8px}
-.lb-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
-.lb-rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0}
+.leaderboard h3{color:var(--green);margin-bottom:12px;font-size:14px}
+.lb-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.lb-rank{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;flex-shrink:0}
 .lb-gold{background:#ffd700;color:#000}.lb-silver{background:#c0c0c0;color:#000}.lb-bronze{background:#cd7f32;color:#000}
-.lb-addr{font-family:monospace;color:var(--green);font-size:11px;flex:1}
-.lb-profit{color:var(--green);font-weight:bold;font-size:12px}
+.lb-addr{font-family:monospace;color:var(--green);font-size:12px;flex:1}
+.lb-profit{color:var(--green);font-weight:bold;font-size:13px}
 
-/* Live Stats */
-.live-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
-.ls-item{text-align:center;padding:8px}
-.ls-value{color:var(--green);font-weight:bold;font-size:18px}
-.ls-label{color:var(--sub);font-size:10px}
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px}
+.stat-item{text-align:center;padding:10px}
+.stat-value{color:var(--green);font-weight:bold;font-size:18px}
+.stat-label{color:var(--sub);font-size:10px}
 
 /* Live Feed */
 .feed-title{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:var(--green)}
 .feed-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.feed-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);animation:slideIn 0.5s ease;font-size:11px}
-.feed-addr{font-family:monospace;color:var(--green);background:rgba(0,255,136,0.1);padding:2px 6px;border-radius:4px;font-size:10px}
-.feed-action{color:var(--sub);flex:1}
-.feed-amount{color:var(--green);font-weight:bold}
+.feed-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);animation:slideIn 0.5s ease;font-size:12px}
+.feed-addr{font-family:monospace;color:var(--green);font-size:11px;background:rgba(0,255,136,0.1);padding:3px 7px;border-radius:4px}
+.feed-action{color:var(--sub);flex:1;font-size:11px}
+.feed-amount{color:var(--green);font-weight:bold;font-size:12px}
 @keyframes slideIn{from{opacity:0;transform:translateX(-15px)}to{opacity:1;transform:translateX(0)}}
 
-/* CTA */
 .btn{display:block;width:100%;padding:18px;border:none;border-radius:16px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all 0.3s}
 .btn-primary{background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;box-shadow:0 8px 30px rgba(0,255,136,0.3)}
-.btn-primary:hover{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,255,136,0.5)}
+.btn-primary:hover{transform:scale(1.02)}
 
-/* Footer */
 .footer{text-align:center;padding:15px;color:var(--sub);font-size:10px;display:flex;justify-content:center;gap:15px}
 
-@media(max-width:380px){.header h1{font-size:26px}.stat-value{font-size:18px}}
+@media(max-width:380px){.header h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="main">
 
-<!-- Top Bar -->
 <div class="top-bar">
 <span style="color:var(--green);font-weight:bold">🦅 SAQR Trade</span>
 <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
 </div>
 
-<!-- Header -->
 <div class="header">
 <div class="logo">🦅</div>
 <h1>SAQR Trade AI</h1>
@@ -97,34 +82,32 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="glass">
 <div class="leaderboard">
 <h3>🏆 Top Earners Today</h3>
-<div class="lb-item"><span class="lb-rank lb-gold">1</span><span class="lb-addr">0x7A3B...9F2E</span><span class="lb-profit">+2.5 ETH</span></div>
-<div class="lb-item"><span class="lb-rank lb-silver">2</span><span class="lb-addr">0xB1C2...4D5E</span><span class="lb-profit">+1.8 ETH</span></div>
-<div class="lb-item"><span class="lb-rank lb-bronze">3</span><span class="lb-addr">0xF6E7...8A9B</span><span class="lb-profit">+1.2 ETH</span></div>
-<div class="lb-item"><span class="lb-rank" style="background:var(--hover);color:var(--sub)">4</span><span class="lb-addr">0xC3D4...1E2F</span><span class="lb-profit">+0.9 ETH</span></div>
-<div class="lb-item"><span class="lb-rank" style="background:var(--hover);color:var(--sub)">5</span><span class="lb-addr">0xA5B6...7C8D</span><span class="lb-profit">+0.7 ETH</span></div>
+<div class="lb-item"><span class="lb-rank lb-gold">1</span><span class="lb-addr">0x7A3B5C9D...9F2E</span><span class="lb-profit">+0.25 ETH</span></div>
+<div class="lb-item"><span class="lb-rank lb-silver">2</span><span class="lb-addr">0xB1C2D3E4...4D5E</span><span class="lb-profit">+0.18 ETH</span></div>
+<div class="lb-item"><span class="lb-rank lb-bronze">3</span><span class="lb-addr">0xF6E7A8B9...8A9B</span><span class="lb-profit">+0.12 ETH</span></div>
+<div class="lb-item"><span class="lb-rank" style="background:var(--hover);color:var(--sub)">4</span><span class="lb-addr">0xC3D4E5F6...1E2F</span><span class="lb-profit">+0.09 ETH</span></div>
+<div class="lb-item"><span class="lb-rank" style="background:var(--hover);color:var(--sub)">5</span><span class="lb-addr">0xA5B6C7D8...7C8D</span><span class="lb-profit">+0.07 ETH</span></div>
 </div>
 </div>
 
-<!-- Live Stats -->
+<!-- Stats -->
 <div class="glass">
-<div class="live-stats">
-<div class="ls-item"><div class="ls-value" id="deposits">$127,450</div><div class="ls-label">Deposits</div></div>
-<div class="ls-item"><div class="ls-value" id="profit24">$12,745</div><div class="ls-label">Profit 24h</div></div>
-<div class="ls-item"><div class="ls-value" id="newUsers">234</div><div class="ls-label">New Users</div></div>
-<div class="ls-item"><div class="ls-value" id="trades">45,821</div><div class="ls-label">Trades</div></div>
+<div class="stats-grid">
+<div class="stat-item"><div class="stat-value" id="deposits">$12,450</div><div class="stat-label">Deposits 24h</div></div>
+<div class="stat-item"><div class="stat-value" id="profit24">$1,245</div><div class="stat-label">Profit 24h</div></div>
+<div class="stat-item"><div class="stat-value" id="newUsers">34</div><div class="stat-label">New Users</div></div>
+<div class="stat-item"><div class="stat-value" id="trades">4,521</div><div class="stat-label">Trades</div></div>
 </div>
 </div>
 
 <!-- Live Feed -->
-<div class="glass" style="height:160px;overflow:hidden;position:relative">
+<div class="glass" style="height:170px;overflow:hidden;position:relative">
 <div class="feed-title"><div class="feed-dot"></div> Live Transactions</div>
 <div id="feed"></div>
 </div>
 
-<!-- CTA -->
 <a href="/select" class="btn btn-primary">🚀 Start Trading Now</a>
 
-<!-- Footer -->
 <div class="footer">
 <span>🔒 SSL</span><span>✅ Audited</span><span>🛡️ Insured</span>
 </div>
@@ -132,53 +115,37 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 
 <script>
-// Theme Toggle
 function toggleTheme(){
-const html=document.documentElement;
-const btn=document.querySelector('.theme-toggle');
-if(html.getAttribute('data-theme')==='dark'){
-html.setAttribute('data-theme','light');
-btn.textContent='☀️ Light';
-btn.style.background='#1a1a2e';btn.style.color='#fff';
-}else{
-html.setAttribute('data-theme','dark');
-btn.textContent='🌙 Dark';
-btn.style.background='';btn.style.color='';
-}}
+const h=document.documentElement;
+const b=document.querySelector('.theme-toggle');
+if(h.getAttribute('data-theme')==='dark'){h.setAttribute('data-theme','light');b.textContent='☀️ Light'}
+else{h.setAttribute('data-theme','dark');b.textContent='🌙 Dark'}
+}
 
-// Live Feed
 function ra(){return'0x'+Array.from({length:40},()=>Math.floor(Math.random()*16).toString(16)).join('')}
-function sa(a){return a.substring(0,8)+'...'+a.substring(a.length-6)}
-const acts=['📤 Withdrew','📥 Deposited','📈 Profit'];
-const coins=['ETH','USDT','BNB','SOL'];
+function sa(a){return a.substring(0,10)+'...'+a.substring(a.length-6)}
 function addFeed(){
-const a=sa(ra()),act=acts[Math.floor(Math.random()*acts.length)],coin=coins[Math.floor(Math.random()*coins.length)],amt=(Math.random()*5+0.1).toFixed(2);
+const a=sa(ra());
+const acts=['📤 Withdrew','📥 Deposited'];
+const act=acts[Math.floor(Math.random()*acts.length)];
+const coins=['ETH','USDT','BNB','SOL'];
+const coin=coins[Math.floor(Math.random()*coins.length)];
+const amt=(Math.random()*0.5+0.01).toFixed(2);
 const d=document.createElement('div');d.className='feed-item';
 d.innerHTML='<span class="feed-addr">'+a+'</span><span class="feed-action">'+act+'</span><span class="feed-amount">+'+amt+' '+coin+'</span>';
-const f=document.getElementById('feed');f.appendChild(d);if(f.children.length>6)f.removeChild(f.firstChild);
+const f=document.getElementById('feed');f.appendChild(d);if(f.children.length>8)f.removeChild(f.firstChild);
 }
-setInterval(()=>addFeed(),2500);
-for(let i=0;i<5;i++)addFeed();
+setInterval(addFeed,5000);
+for(let i=0;i<6;i++)addFeed();
 
-// Animate Stats
-function animateValue(id,start,end,duration){
-const el=document.getElementById(id);
-const startTime=performance.now();
-function update(now){
-const elapsed=now-startTime;
-const progress=Math.min(elapsed/duration,1);
-const val=Math.floor(start+(end-start)*progress);
-el.textContent=val>=1000?'$'+(val/1000).toFixed(1)+'K':val;
-if(progress<1)requestAnimationFrame(update);
-}
-requestAnimationFrame(update);
-}
+const stats={deposits:12450,profit24:1245,newUsers:34,trades:4521};
 setInterval(()=>{
-animateValue('deposits',127000,128000,2000);
-animateValue('profit24',12700,12800,2000);
-animateValue('newUsers',230,240,2000);
-animateValue('trades',45800,46000,2000);
-},5000);
+for(const[id,base]of Object.entries(stats)){
+const el=document.getElementById(id);
+const cur=parseInt(el.textContent.replace(/[^0-9]/g,''));
+el.textContent=id==='deposits'||id==='profit24'?'$'+(cur+Math.floor(Math.random()*2)).toLocaleString():(cur+Math.floor(Math.random()*2)).toLocaleString();
+}
+},8000);
 </script>
 </body>
 </html>
