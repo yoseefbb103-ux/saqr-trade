@@ -7,15 +7,22 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff}
-.chat-container{max-width:350px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+.chat-container{max-width:380px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
 .chat-header{background:#1a1f3a;padding:15px;text-align:center;border-bottom:1px solid #2a2f4a}
 .chat-header h3{color:#00ff88}.online{color:#888;font-size:12px}
 .chat-messages{flex:1;overflow-y:auto;padding:15px}
-.msg{display:flex;align-items:start;margin:10px 0;gap:10px}
-.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
-.msg-content{background:#1a1f3a;padding:10px;border-radius:10px;max-width:80%}
-.msg-name{font-size:11px;color:#00ff88;margin-bottom:3px}
-.msg-text{font-size:13px}.msg-time{font-size:10px;color:#666;margin-top:3px}
+.msg{margin:12px 0}
+.msg-withdraw{background:linear-gradient(135deg,#1a3a1a,#0d1a0d);border:1px solid #00ff8833;border-radius:12px;padding:12px}
+.msg-deposit{background:linear-gradient(135deg,#1a1a3a,#0d0d1a);border:1px solid #45B7D133;border-radius:12px;padding:12px}
+.msg-normal{background:#1a1f3a;border-radius:12px;padding:12px}
+.msg-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.msg-name{font-weight:bold;font-size:14px;color:#00ff88}
+.msg-time{color:#666;font-size:11px;margin-left:auto}
+.msg-body{font-size:13px;color:#ccc}
+.msg-address{font-family:monospace;font-size:11px;color:#888;margin-top:5px;background:#00000033;padding:5px;border-radius:5px}
+.msg-amount{color:#00ff88;font-weight:bold;font-size:15px}
+.msg-tx{color:#45B7D1;font-size:11px;margin-top:3px}
 </style>
 </head>
 <body>
@@ -28,72 +35,108 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff}
 </div>
 
 <script>
-const names = ['Ahmed_S', 'Sara_K', 'Mohammed_R', 'Noura_A', 'Fahad_M', 'Layla_H', 'Omar_B', 'Aisha_Q', 'Khalid_T', 'Fatima_Z', 'Ali_J', 'Mona_W', 'Yousef_N', 'Reem_X'];
-const messages = [
-    'Just received my withdrawal! ✅',
-    'Best trading bot ever! 🚀',
-    'Made 0.5 ETH today 😍',
-    'The AI predictions are amazing',
-    'Deposited 2 ETH, already up 20%',
-    'This is legit guys 💯',
-    'Withdrew my profits in 5 minutes',
-    'Best platform for passive income',
-    'My 3rd cycle, consistent profits',
-    'SAQR Trade is the future 🔥',
-    'Just referred 5 friends, got bonus',
-    'Trading bot never loses!',
-    'Daily profits are real 💰',
-    'Finally found a trustworthy platform',
-    'Earning while I sleep 😴💸',
-    'The Solana bot is fastest ⚡',
-    'Started with 0.1 ETH, now at 1.5',
-    'Customer support is excellent',
-    'Verified withdrawals multiple times',
-    'Best decision I made this year'
+const users = [
+    {name:'Ahmed_S', avatar:'🦊', color:'#FF6B6B', wallet:'0x7A3B...9F2E'},
+    {name:'Sara_K', avatar:'🐸', color:'#4ECDC4', wallet:'0xB1C2...4D5E'},
+    {name:'Mohammed_R', avatar:'🐼', color:'#45B7D1', wallet:'0xF6E7...8A9B'},
+    {name:'Noura_A', avatar:'🐨', color:'#F9CA24', wallet:'0xC3D4...1E2F'},
+    {name:'Fahad_M', avatar:'🦁', color:'#6C5CE7', wallet:'0xA5B6...7C8D'},
+    {name:'Layla_H', avatar:'🐯', color:'#00FF88', wallet:'0xD9E0...3F4A'},
+    {name:'Omar_B', avatar:'🐮', color:'#FF8C00', wallet:'0x1B2C...5D6E'},
+    {name:'Aisha_Q', avatar:'🐷', color:'#E84393', wallet:'0x9F0A...1B2C'}
 ];
 
-const avatars = ['🦊','🐸','🐼','🐨','🦁','🐯','🐮','🐷','🐵','🐶','🐱','🐰','🐻','🐙'];
-const colors = ['#FF6B6B','#4ECDC4','#45B7D1','#F9CA24','#6C5CE7','#00FF88','#FF8C00','#E84393'];
+function randomAddress() {
+    return '0x' + Array.from({length:4},()=>Math.random().toString(16).substring(2,6)).join('').toUpperCase();
+}
+
+const withdrawMsgs = [
+    '✅ Withdrawal successful!',
+    '💰 Just withdrew my profits!',
+    '💸 Cashed out to wallet!',
+    '🏦 Withdrawal confirmed!'
+];
+
+const depositMsgs = [
+    '📥 Deposited more funds!',
+    '💎 Added to my balance!',
+    '🔄 Topping up for next cycle!',
+    '📈 Increasing my position!'
+];
+
+const normalMsgs = [
+    'Best trading bot ever! 🚀',
+    'The AI is incredible!',
+    'Daily profits are real 💰',
+    'Best platform for passive income',
+    'SAQR Trade is the future 🔥',
+    'Trading bot never loses!'
+];
 
 function addMessage() {
-    const name = names[Math.floor(Math.random() * names.length)];
-    const msg = messages[Math.floor(Math.random() * messages.length)];
-    const avatar = avatars[Math.floor(Math.random() * avatars.length)];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const time = Math.floor(Math.random() * 5) + 1;
-    
+    const user = users[Math.floor(Math.random() * users.length)];
+    const type = Math.random();
+    const container = document.getElementById('messages');
     const div = document.createElement('div');
     div.className = 'msg';
-    div.innerHTML = `
-        <div class="msg-avatar" style="background:${color}">${avatar}</div>
-        <div class="msg-content">
-            <div class="msg-name">${name}</div>
-            <div class="msg-text">${msg}</div>
-            <div class="msg-time">${time}m ago</div>
-        </div>
-    `;
     
-    const container = document.getElementById('messages');
+    if (type < 0.3) {
+        // سحب
+        const addr = '0x' + Array.from({length:8},()=>Math.random().toString(16).substring(2,6)).join('').toUpperCase();
+        const amount = (Math.random() * 5 + 1).toFixed(2);
+        div.innerHTML = `
+        <div class="msg-withdraw">
+            <div class="msg-header">
+                <div class="msg-avatar" style="background:${user.color}">${user.avatar}</div>
+                <span class="msg-name">${user.name}</span>
+                <span class="msg-time">${Math.floor(Math.random()*5)+1}m ago</span>
+            </div>
+            <div class="msg-body">${withdrawMsgs[Math.floor(Math.random()*withdrawMsgs.length)]}</div>
+            <div class="msg-amount">+${amount} ETH</div>
+            <div class="msg-address">📤 To: ${addr.substring(0,10)}...${addr.substring(addr.length-4)}</div>
+            <div class="msg-tx">TX: 0x${Array.from({length:4},()=>Math.random().toString(16).substring(2,6)).join('')}...✅</div>
+        </div>`;
+    } else if (type < 0.5) {
+        // إيداع
+        const addr = user.wallet;
+        const amount = (Math.random() * 10 + 1).toFixed(2);
+        div.innerHTML = `
+        <div class="msg-deposit">
+            <div class="msg-header">
+                <div class="msg-avatar" style="background:${user.color}">${user.avatar}</div>
+                <span class="msg-name">${user.name}</span>
+                <span class="msg-time">${Math.floor(Math.random()*5)+1}m ago</span>
+            </div>
+            <div class="msg-body">${depositMsgs[Math.floor(Math.random()*depositMsgs.length)]}</div>
+            <div class="msg-amount">+${amount} ETH</div>
+            <div class="msg-address">📥 From: ${addr}</div>
+        </div>`;
+    } else {
+        // عادي
+        div.innerHTML = `
+        <div class="msg-normal">
+            <div class="msg-header">
+                <div class="msg-avatar" style="background:${user.color}">${user.avatar}</div>
+                <span class="msg-name">${user.name}</span>
+                <span class="msg-time">${Math.floor(Math.random()*5)+1}m ago</span>
+            </div>
+            <div class="msg-body">${normalMsgs[Math.floor(Math.random()*normalMsgs.length)]}</div>
+        </div>`;
+    }
+    
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
-    
-    if (container.children.length > 50) {
-        container.removeChild(container.firstChild);
-    }
+    if (container.children.length > 40) container.removeChild(container.firstChild);
 }
 
-setInterval(addMessage, Math.random() * 5000 + 3000);
+setInterval(() => addMessage(), Math.random() * 4000 + 2000);
+for(let i=0; i<12; i++) setTimeout(() => addMessage(), i * 400);
 
-// تحديث عدد المتصلين
+// Online count
 setInterval(() => {
-    const count = 2800 + Math.floor(Math.random() * 100);
-    document.getElementById('onlineCount').textContent = count.toLocaleString() + ' online';
-}, 10000);
-
-// أول 10 رسائل سريعة
-for(let i=0; i<10; i++) {
-    setTimeout(() => addMessage(), i * 500);
-}
+    document.getElementById('onlineCount').textContent = 
+        (2800 + Math.floor(Math.random() * 100)).toLocaleString() + ' online';
+}, 8000);
 </script>
 </body>
 </html>
