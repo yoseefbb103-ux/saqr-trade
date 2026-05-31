@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Program - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff}
+.container{max-width:500px;margin:0 auto;padding:20px}
+h2{text-align:center;margin:20px 0;color:#00ff88}
+.card{background:#1a1f3a;border:1px solid #2a2f4a;border-radius:15px;padding:20px;margin:15px 0}
+.link-box{background:#0d1130;padding:15px;border-radius:10px;word-break:break-all;font-family:monospace;font-size:13px;margin:10px 0}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin:10px 0;text-align:center;text-decoration:none}
+.btn-copy{background:#2a2f4a;color:#fff}
+.btn-share{background:#00ff88;color:#000;font-weight:bold}
+.reward-table{width:100%;border-collapse:collapse;margin:15px 0}
+.reward-table th{background:#00ff88;color:#000;padding:10px;text-align:left}
+.reward-table td{padding:10px;border-bottom:1px solid #2a2f4a}
+.leaderboard{list-style:none;padding:0}
+.leaderboard li{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #2a2f4a;align-items:center}
+.rank{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px}
+.gold{background:#FFD700;color:#000}
+.silver{background:#C0C0C0;color:#000}
+.bronze{background:#CD7F32;color:#000}
+.amount{color:#00ff88;font-weight:bold}
+.you{background:#1a3a1a;border:1px solid #00ff88}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>🎁 Referral Program</h2>
+
+<div class="card">
+<h3>🔗 Your Referral Link</h3>
+<div class="link-box">saqr-trade.app/ref/ABC123</div>
+<button class="btn btn-copy" onclick="copyRef()">📋 Copy Link</button>
+<button class="btn btn-share">📤 Share</button>
+</div>
+
+<div class="card">
+<h3>💰 Rewards</h3>
+<table class="reward-table">
+<tr><th>Level</th><th>Friends</th><th>Reward</th><th>Bonus</th></tr>
+<tr><td>🥉 Bronze</td><td>1</td><td class="amount">5%</td><td>-</td></tr>
+<tr><td>🥈 Silver</td><td>3</td><td class="amount">7%</td><td>$50</td></tr>
+<tr><td>🥇 Gold</td><td>10</td><td class="amount">10%</td><td>$500</td></tr>
+<tr><td>💎 Diamond</td><td>50</td><td class="amount">15%</td><td>iPhone 15</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>📊 Your Stats</h3>
+<p>👥 Friends: <span class="amount">12</span></p>
+<p>💰 Deposits: <span class="amount">$3,450</span></p>
+<p>🎁 Earned: <span class="amount">$241.50</span></p>
+</div>
+
+<div class="card">
+<h3>🏆 Leaderboard</h3>
+<ul class="leaderboard">
+<li><span><span class="rank gold">1</span> Ahmed_S</span><span>234 refs</span><span class="amount">$12,450</span></li>
+<li><span><span class="rank silver">2</span> Sara_K</span><span>187 refs</span><span class="amount">$9,340</span></li>
+<li><span><span class="rank bronze">3</span> Mohammed_R</span><span>156 refs</span><span class="amount">$7,820</span></li>
+<li><span>4. Noura_A</span><span>89 refs</span><span class="amount">$4,450</span></li>
+<li class="you"><span>47. You</span><span>12 refs</span><span class="amount">$241.50</span></li>
+</ul>
+</div>
+</div>
+<script>
+function copyRef(){navigator.clipboard.writeText('saqr-trade.app/ref/ABC123');alert('Link copied!')}
+</script>
+</body>
+</html>
