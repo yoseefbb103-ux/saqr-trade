@@ -4,3 +4,4 @@ gunicorn
 requests
 web3
 eth-account
+solders
