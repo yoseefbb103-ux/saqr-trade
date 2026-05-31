@@ -8,38 +8,27 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:100vh}
 .container{max-width:500px;margin:0 auto;padding:20px}
-.header{text-align:center;padding:40px 20px}
+.header{text-align:center;padding:40px 20px 10px}
 .header h1{font-size:32px;color:#00ff88}
 .header p{color:#888;margin:10px 0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:30px 0}
-.stat{background:#1a1f3a;border-radius:15px;padding:20px;text-align:center;border:1px solid #2a2f4a}
-.stat-value{font-size:28px;font-weight:bold;color:#00ff88}
-.stat-label{color:#888;font-size:12px;margin-top:5px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:20px 0}
+.stat{background:#1a1f3a;border-radius:15px;padding:15px;text-align:center;border:1px solid #2a2f4a}
+.stat-value{font-size:24px;font-weight:bold;color:#00ff88}
+.stat-label{color:#888;font-size:11px;margin-top:3px}
 .btn{display:block;width:100%;padding:18px;border:none;border-radius:15px;font-size:18px;font-weight:bold;cursor:pointer;margin:15px 0;text-align:center;text-decoration:none}
 .btn-primary{background:#00ff88;color:#000}
-.testimonials{background:#1a1f3a;border-radius:15px;padding:20px;margin:20px 0}
-.testimonial{padding:10px 0;border-bottom:1px solid #2a2f4a;color:#aaa}
 .security{text-align:center;padding:20px;color:#888;font-size:12px}
-/* شات */
-.live-chat{position:fixed;bottom:20px;right:20px;z-index:999}
-.chat-toggle{width:60px;height:60px;border-radius:50%;background:#00ff88;color:#000;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(0,255,136,0.3);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(0,255,136,0.3)}50%{box-shadow:0 4px 30px rgba(0,255,136,0.6)}}
-.chat-box{display:none;position:fixed;bottom:90px;right:20px;width:320px;height:420px;background:#1a1f3a;border-radius:15px;border:1px solid #2a2f4a;overflow:hidden;flex-direction:column}
-.chat-box.open{display:flex}
-.chat-top{background:#0d1130;padding:12px;display:flex;justify-content:space-between;align-items:center}
-.chat-top h4{color:#00ff88;font-size:13px}
-.chat-close{background:none;border:none;color:#fff;font-size:16px;cursor:pointer}
-.chat-msgs{flex:1;overflow-y:auto;padding:10px}
-.msg{margin:8px 0}
-.msg-withdraw{background:linear-gradient(135deg,#0d1a0d,#1a2a1a);border:1px solid #00ff8833;border-radius:10px;padding:10px}
-.msg-deposit{background:linear-gradient(135deg,#0d0d1a,#1a1a2a);border:1px solid #45B7D133;border-radius:10px;padding:10px}
-.msg-normal{background:#1a1f3a;border-radius:10px;padding:10px}
-.msg-row{display:flex;justify-content:space-between;margin-bottom:3px}
-.msg-addr{font-family:monospace;font-size:11px;color:#00ff88}
-.msg-time{color:#666;font-size:10px}
-.msg-text{font-size:12px;color:#ccc;margin:3px 0}
-.msg-amount{color:#00ff88;font-weight:bold;font-size:14px}
-.msg-tx{font-family:monospace;font-size:9px;color:#888;background:#00000022;padding:3px;border-radius:4px;margin-top:3px}
+
+/* التوصيات الحية */
+.live-feed{background:#1a1f3a;border-radius:15px;padding:15px;margin:20px 0;border:1px solid #2a2f4a;overflow:hidden;height:180px;position:relative}
+.live-feed h3{color:#00ff88;font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.live-dot{width:8px;height:8px;background:#00ff88;border-radius:50%;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.feed-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2f4a;animation:slideUp 0.5s ease;font-size:13px}
+.feed-addr{font-family:monospace;color:#00ff88;font-size:11px}
+.feed-action{color:#ccc;font-size:12px}
+.feed-amount{color:#00ff88;font-weight:bold;margin-left:auto;font-size:12px}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -54,50 +43,33 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff;min-height:
 <div class="stat"><div class="stat-value">$2.4M</div><div class="stat-label">Total Profits</div></div>
 <div class="stat"><div class="stat-value">4.9 ⭐</div><div class="stat-label">Rating</div></div>
 </div>
-<a href="/select" class="btn btn-primary">🚀 Start Trading Now</a>
-<div class="testimonials">
-<div class="testimonial">💬 "Made $450 first day!" - Ahmed</div>
-<div class="testimonial">💬 "Best trading bot ever!" - Sarah</div>
-<div class="testimonial">💬 "Withdrew profits easily" - Mohammed</div>
+
+<div class="live-feed">
+<h3><span class="live-dot"></span> Live Transactions</h3>
+<div id="feed"></div>
 </div>
+
+<a href="/select" class="btn btn-primary">🚀 Start Trading Now</a>
 <div class="security">🔒 SSL Encrypted | ✅ Audited | 🛡️ Insured</div>
 </div>
 
-<div class="live-chat">
-<button class="chat-toggle" onclick="toggleChat()">💬</button>
-<div class="chat-box" id="chatBox">
-<div class="chat-top">
-<h4>💬 Live Transactions (<span id="online">2,847</span>)</h4>
-<button class="chat-close" onclick="toggleChat()">✕</button>
-</div>
-<div class="chat-msgs" id="chatMsgs"></div>
-</div>
-</div>
-
 <script>
-function toggleChat(){document.getElementById('chatBox').classList.toggle('open')}
-
 function ra(){return '0x'+Array.from({length:40},()=>Math.floor(Math.random()*16).toString(16)).join('')}
 function sa(a){return a.substring(0,8)+'...'+a.substring(a.length-6)}
-function rt(){return '0x'+Array.from({length:64},()=>Math.floor(Math.random()*16).toString(16)).join('')}
 
-function addMsg(){
-const a=ra(),s=sa(a),tx=rt(),amt=(Math.random()*5+0.5).toFixed(3),t=Math.floor(Math.random()*5)+1;
-const d=document.createElement('div');d.className='msg';
-const r=Math.random();
-if(r<0.6){
-d.innerHTML='<div class="msg-withdraw"><div class="msg-row"><span class="msg-addr">📤 '+s+'</span><span class="msg-time">'+t+'m</span></div><div class="msg-text">Withdrawal confirmed ✅</div><div class="msg-amount">+'+amt+' ETH</div><div class="msg-tx">TX: '+tx.substring(0,20)+'...✅</div></div>';
-}else if(r<0.8){
-d.innerHTML='<div class="msg-deposit"><div class="msg-row"><span class="msg-addr">📥 '+s+'</span><span class="msg-time">'+t+'m</span></div><div class="msg-text">Deposited funds 📥</div><div class="msg-amount">+'+(Math.random()*10+1).toFixed(2)+' ETH</div></div>';
-}else{
-d.innerHTML='<div class="msg-normal"><div class="msg-row"><span class="msg-addr">🏦 '+s+'</span><span class="msg-time">'+t+'m</span></div><div class="msg-text">Trading bot profit 📈</div><div class="msg-amount">+'+amt+' ETH</div></div>';
+const actions=['📤 Withdrew','📥 Deposited','📈 Profit from','💸 Cashed out','🔄 Swapped'];
+const coins=['ETH','USDT','BNB','SOL','USDC'];
+
+function addFeed(){
+const addr=sa(ra()),action=actions[Math.floor(Math.random()*actions.length)],coin=coins[Math.floor(Math.random()*coins.length)],amt=(Math.random()*5+0.1).toFixed(2);
+const d=document.createElement('div');d.className='feed-item';
+d.innerHTML='<span class="feed-addr">'+addr+'</span><span class="feed-action">'+action+'</span><span class="feed-amount">+'+amt+' '+coin+'</span>';
+const f=document.getElementById('feed');
+f.appendChild(d);
+if(f.children.length>8)f.removeChild(f.firstChild);
 }
-const c=document.getElementById('chatMsgs');c.appendChild(d);c.scrollTop=c.scrollHeight;
-if(c.children.length>25)c.removeChild(c.firstChild);
-}
-setInterval(()=>addMsg(),Math.random()*4000+2000);
-for(let i=0;i<8;i++)setTimeout(()=>addMsg(),i*600);
-setInterval(()=>{document.getElementById('online').textContent=(2800+Math.floor(Math.random()*100)).toLocaleString()},8000);
+setInterval(()=>addFeed(),Math.random()*3000+2000);
+for(let i=0;i<6;i++)addFeed();
 </script>
 </body>
 </html>
