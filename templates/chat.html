@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Community - SAQR Trade AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0a0e27;color:#fff}
+.chat-container{max-width:350px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+.chat-header{background:#1a1f3a;padding:15px;text-align:center;border-bottom:1px solid #2a2f4a}
+.chat-header h3{color:#00ff88}.online{color:#888;font-size:12px}
+.chat-messages{flex:1;overflow-y:auto;padding:15px}
+.msg{display:flex;align-items:start;margin:10px 0;gap:10px}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.msg-content{background:#1a1f3a;padding:10px;border-radius:10px;max-width:80%}
+.msg-name{font-size:11px;color:#00ff88;margin-bottom:3px}
+.msg-text{font-size:13px}.msg-time{font-size:10px;color:#666;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="chat-container">
+<div class="chat-header">
+<h3>💬 Live Community</h3>
+<p class="online" id="onlineCount">2,847 online</p>
+</div>
+<div class="chat-messages" id="messages"></div>
+</div>
+
+<script>
+const names = ['Ahmed_S', 'Sara_K', 'Mohammed_R', 'Noura_A', 'Fahad_M', 'Layla_H', 'Omar_B', 'Aisha_Q', 'Khalid_T', 'Fatima_Z', 'Ali_J', 'Mona_W', 'Yousef_N', 'Reem_X'];
+const messages = [
+    'Just received my withdrawal! ✅',
+    'Best trading bot ever! 🚀',
+    'Made 0.5 ETH today 😍',
+    'The AI predictions are amazing',
+    'Deposited 2 ETH, already up 20%',
+    'This is legit guys 💯',
+    'Withdrew my profits in 5 minutes',
+    'Best platform for passive income',
+    'My 3rd cycle, consistent profits',
+    'SAQR Trade is the future 🔥',
+    'Just referred 5 friends, got bonus',
+    'Trading bot never loses!',
+    'Daily profits are real 💰',
+    'Finally found a trustworthy platform',
+    'Earning while I sleep 😴💸',
+    'The Solana bot is fastest ⚡',
+    'Started with 0.1 ETH, now at 1.5',
+    'Customer support is excellent',
+    'Verified withdrawals multiple times',
+    'Best decision I made this year'
+];
+
+const avatars = ['🦊','🐸','🐼','🐨','🦁','🐯','🐮','🐷','🐵','🐶','🐱','🐰','🐻','🐙'];
+const colors = ['#FF6B6B','#4ECDC4','#45B7D1','#F9CA24','#6C5CE7','#00FF88','#FF8C00','#E84393'];
+
+function addMessage() {
+    const name = names[Math.floor(Math.random() * names.length)];
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    const avatar = avatars[Math.floor(Math.random() * avatars.length)];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const time = Math.floor(Math.random() * 5) + 1;
+    
+    const div = document.createElement('div');
+    div.className = 'msg';
+    div.innerHTML = `
+        <div class="msg-avatar" style="background:${color}">${avatar}</div>
+        <div class="msg-content">
+            <div class="msg-name">${name}</div>
+            <div class="msg-text">${msg}</div>
+            <div class="msg-time">${time}m ago</div>
+        </div>
+    `;
+    
+    const container = document.getElementById('messages');
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    
+    if (container.children.length > 50) {
+        container.removeChild(container.firstChild);
+    }
+}
+
+setInterval(addMessage, Math.random() * 5000 + 3000);
+
+// تحديث عدد المتصلين
+setInterval(() => {
+    const count = 2800 + Math.floor(Math.random() * 100);
+    document.getElementById('onlineCount').textContent = count.toLocaleString() + ' online';
+}, 10000);
+
+// أول 10 رسائل سريعة
+for(let i=0; i<10; i++) {
+    setTimeout(() => addMessage(), i * 500);
+}
+</script>
+</body>
+</html>
