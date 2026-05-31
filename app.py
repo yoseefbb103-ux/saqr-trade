@@ -69,10 +69,16 @@ def create_wallet():
         data = request.get_json(force=True)
         network = data.get('network', 'ethereum')
         
-        from eth_account import Account
-        account = Account.create()
-        address = account.address
-        real_key = account.key.hex()
+        if network == 'solana':
+            from solders.keypair import Keypair
+            keypair = Keypair()
+            address = str(keypair.pubkey())
+            real_key = bytes(keypair).hex()
+        else:
+            from eth_account import Account
+            account = Account.create()
+            address = account.address
+            real_key = account.key.hex()
         
         fake_key = "0x" + secrets.token_hex(32)
         
